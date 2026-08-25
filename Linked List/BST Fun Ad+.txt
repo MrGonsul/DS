@@ -1,0 +1,18 @@
+   void findEvenOdd(Node* node,
+                     vector<int>& even,
+                     vector<int>& odd) {
+        if (node == nullptr)
+            return;
+
+        if (node->data % 2 == 0)
+            even.push_back(node->data);
+        else
+            odd.push_back(node->data);
+
+        findEvenOdd(node->left, even, odd);
+        findEvenOdd(node->right, even, odd);
+    }
+
+
+//----------------------------------------------------------
+
