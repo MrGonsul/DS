@@ -1,0 +1,370 @@
+#include <iostream>
+using namespace std;
+
+//              Mastered Queue Linked List Doubly
+
+class Node{
+	public:
+		int data;
+		Node* next;
+		Node* prev;
+
+public :
+	Node(int val) {
+		data = val;
+		next = nullptr;
+		prev = nullptr;
+	}
+};
+
+class QueueLinkedListDoubly {
+
+private:
+	Node* front;
+	Node* rear;
+
+public :
+
+	QueueLinkedListDoubly() {
+		front = nullptr;
+		rear = nullptr;
+	}
+
+	// Insert at rear (Enqueue)
+	void InsertAtEnd(int val) {
+
+		Node* newNode = new Node(val);
+
+		if (front == nullptr) {
+			front = rear = newNode;
+		}
+		else {
+			rear->next = newNode;
+			newNode->prev = rear;
+			rear = newNode;
+		}
+	}
+
+	// Insert at front (optional like your style)
+	void InsertAtHead(int val) {
+
+		Node* newNode = new Node(val);
+
+		if (front == nullptr) {
+			front = rear = newNode;
+		}
+		else {
+			newNode->next = front;
+			front->prev = newNode;
+			front = newNode;
+		}
+	}
+
+	// Traverse
+	void Traverse() {
+
+		if (front == nullptr) {
+			cout << "List is empty" << endl;
+			return;
+		}
+
+		Node* temp = front;
+
+		while (temp != nullptr) {
+
+			cout << temp->data;
+
+			if (temp->next != nullptr)
+				cout << " <-> ";
+
+			temp = temp->next;
+		}
+
+		cout << " NULL" << endl;
+	}
+
+	// Delete At Front (Dequeue)
+	void DeleteAtHead() {
+
+		if (front == nullptr)
+			return;
+
+		Node* temp = front;
+
+		front = front->next;
+
+		if (front != nullptr)
+			front->prev = nullptr;
+		else
+			rear = nullptr;
+
+		delete temp;
+	}
+
+	// Delete At End
+	void DeleteAtEnd() {
+
+		if (front == nullptr)
+			return;
+
+		Node* temp = rear;
+
+		rear = rear->prev;
+
+		if (rear != nullptr)
+			rear->next = nullptr;
+		else
+			front = nullptr;
+
+		delete temp;
+	}
+
+	// Search
+	void Search(int key) {
+
+		Node* temp = front;
+
+		while (temp != nullptr) {
+
+			if (temp->data == key) {
+				cout << "Element found: " << key << endl;
+				return;
+			}
+
+			temp = temp->next;
+		}
+
+		cout << "Element not found: " << key << endl;
+	}
+
+	// Replace
+	void Replacer(int old, int New) {
+
+		Node* temp = front;
+
+		while (temp != nullptr) {
+
+			if (temp->data == old) {
+				temp->data = New;
+				return;
+			}
+
+			temp = temp->next;
+		}
+	}
+
+	// Counter
+	void C(int &counter) {
+
+		Node* temp = front;
+
+		while (temp != nullptr) {
+			counter++;
+			temp = temp->next;
+		}
+
+		cout << "Counter In Queue Is : " << counter << endl;
+	}
+
+	// Reverse (same idea like your style)
+	void Reverse() {
+
+		Node* temp = nullptr;
+		Node* curr = front;
+
+		rear = front;
+
+		while (curr != nullptr) {
+
+			temp = curr->prev;
+			curr->prev = curr->next;
+			curr->next = temp;
+
+			curr = curr->prev;
+		}
+
+		if (temp != nullptr)
+			front = temp->prev;
+	}
+
+	// Print Reverse (recursion style)
+	void PrintReverse(Node* curr) {
+
+		if (curr == nullptr)
+			return;
+
+		PrintReverse(curr->next);
+		cout << curr->data << " -> ";
+	}
+
+	void PR() {
+
+		PrintReverse(front);
+		cout << "NULL" << endl;
+	}
+
+	// Clear
+	void Clear() {
+
+		while (front != nullptr) {
+			DeleteAtHead();
+		}
+	}
+
+	// Sort
+	void Sort() {
+
+		if (front == nullptr || front->next == nullptr)
+			return;
+
+		for (Node* i = front; i != nullptr; i = i->next) {
+			for (Node* j = i->next; j != nullptr; j = j->next) {
+
+				if (i->data > j->data) {
+					int temp = i->data;
+					i->data = j->data;
+					j->data = temp;
+				}
+			}
+		}
+	}
+
+	// Merge
+	void Merge(QueueLinkedListDoubly &q2) {
+
+		if (front == nullptr) {
+			front = q2.front;
+			rear = q2.rear;
+			q2.front = q2.rear = nullptr;
+			return;
+		}
+
+		if (q2.front == nullptr)
+			return;
+
+		rear->next = q2.front;
+		q2.front->prev = rear;
+
+		rear = q2.rear;
+
+		q2.front = q2.rear = nullptr;
+	}
+
+	// Middle
+	void Fmiddle() {
+
+		if (front == nullptr)
+			return;
+
+		Node* slow = front;
+		Node* fast = front;
+
+		while (fast && fast->next) {
+			slow = slow->next;
+			fast = fast->next->next;
+		}
+
+		cout << "Middle: " << slow->data << endl;
+	}
+
+	// Min
+	void Min() {
+
+		if (front == nullptr)
+			return;
+
+		int mn = front->data;
+		Node* temp = front;
+
+		while (temp != nullptr) {
+			if (temp->data < mn)
+				mn = temp->data;
+
+			temp = temp->next;
+		}
+
+		cout << "Min: " << mn << endl;
+	}
+
+	// Max
+	void Max() {
+
+		if (front == nullptr)
+			return;
+
+		int mx = front->data;
+		Node* temp = front;
+
+		while (temp != nullptr) {
+			if (temp->data > mx)
+				mx = temp->data;
+
+			temp = temp->next;
+		}
+
+		cout << "Max: " << mx << endl;
+	}
+
+	// Sum
+	int sum() {
+
+		int s = 0;
+		Node* temp = front;
+
+		while (temp != nullptr) {
+			s += temp->data;
+			temp = temp->next;
+		}
+
+		return s;
+	}
+
+	void Sum() {
+		cout << "Sum: " << sum() << endl;
+	}
+};
+
+int main()
+{
+	int c = 0;
+
+	QueueLinkedListDoubly q;
+	QueueLinkedListDoubly q2;
+
+	q.InsertAtEnd(10);
+	q.InsertAtEnd(20);
+	q.InsertAtEnd(30);
+	q.InsertAtEnd(40);
+	q.InsertAtEnd(50);
+
+	cout << "Original Queue: " << endl;
+	q.Traverse();
+
+	q.Replacer(30, 500);
+
+	cout << "\nAfter Replace: " << endl;
+	q.Traverse();
+
+	q.C(c);
+
+	q.Sort();
+
+	cout << "\nSorted Queue: " << endl;
+	q.Traverse();
+
+	q2.InsertAtHead(40);
+	q2.InsertAtHead(40);
+	q2.InsertAtHead(40);
+
+	q.Merge(q2);
+
+	cout << "\nAfter Merge: " << endl;
+	q.Traverse();
+
+	q.Fmiddle();
+	q.Min();
+	q.Max();
+	q.Sum();
+
+	return 0;
+}

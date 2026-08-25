@@ -1,0 +1,424 @@
+#include <iostream>
+using namespace std;
+
+//              Mastered Queue Linked List Single
+
+class Node{
+	public:
+		int data;
+		Node* next;
+
+public :
+	Node(int val) {
+		data = val;
+		next = nullptr;
+	}
+};
+
+class QueueLinkedList {
+
+private:
+	Node* front;
+	Node* rear;
+
+public :
+
+	QueueLinkedList() {
+		front = nullptr;
+		rear = nullptr;
+	}
+
+	// Insert at head (enqueue front style)
+	void InsertAtHead(int val) {
+
+		Node* newNode = new Node(val);
+
+		if (front == nullptr) {
+			front = rear = newNode;
+		}
+		else {
+			newNode->next = front;
+			front = newNode;
+		}
+	}
+
+	// Insert at end (ENQUEUE)
+	void InsertAtEnd(int val) {
+
+		Node* newNode = new Node(val);
+
+		if (front == nullptr) {
+			front = rear = newNode;
+		}
+		else {
+			rear->next = newNode;
+			rear = newNode;
+		}
+	}
+
+	// Traverse
+	void Traverse() {
+
+		if (front == nullptr) {
+			cout << "Queue is empty" << endl;
+			return;
+		}
+
+		Node* temp = front;
+
+		while (temp != nullptr) {
+			cout << temp->data << " -> ";
+			temp = temp->next;
+		}
+
+		cout << "NULL" << endl;
+	}
+
+	// Delete At Head (DEQUEUE)
+	void DeleteAtHead() {
+
+		if (front == nullptr)
+			return;
+
+		Node* del = front;
+		front = front->next;
+
+		if (front == nullptr)
+			rear = nullptr;
+
+		delete del;
+	}
+
+	// Delete At End
+	void DeleteAtEnd() {
+
+		if (front == nullptr)
+			return;
+
+		if (front == rear) {
+			delete front;
+			front = rear = nullptr;
+			return;
+		}
+
+		Node* temp = front;
+
+		while (temp->next != rear) {
+			temp = temp->next;
+		}
+
+		delete rear;
+		rear = temp;
+		rear->next = nullptr;
+	}
+
+	// Delete At Position
+	void DeleteAtPos(int pos) {
+
+		if (front == nullptr)
+			return;
+
+		if (pos == 1) {
+			DeleteAtHead();
+			return;
+		}
+
+		Node* temp = front;
+		Node* prev = nullptr;
+		int i = 1;
+
+		while (i < pos && temp != nullptr) {
+			prev = temp;
+			temp = temp->next;
+			i++;
+		}
+
+		if (temp == nullptr)
+			return;
+
+		prev->next = temp->next;
+
+		if (temp == rear)
+			rear = prev;
+
+		delete temp;
+	}
+
+	// Insert At Position
+	void InsertAtPos(int val, int idx) {
+
+		if (idx == 1) {
+			InsertAtHead(val);
+			return;
+		}
+
+		Node* newNode = new Node(val);
+		Node* temp = front;
+		int i = 1;
+
+		while (i < idx - 1 && temp != nullptr) {
+			temp = temp->next;
+			i++;
+		}
+
+		if (temp == nullptr)
+			return;
+
+		newNode->next = temp->next;
+		temp->next = newNode;
+
+		if (newNode->next == nullptr)
+			rear = newNode;
+	}
+
+	// Search
+	void Search(int key) {
+
+		Node* temp = front;
+
+		while (temp != nullptr) {
+			if (temp->data == key) {
+				cout << "Element found: " << key << endl;
+				return;
+			}
+			temp = temp->next;
+		}
+
+		cout << "Element not found: " << key << endl;
+	}
+
+	// Replace
+	void Replacer(int old, int New) {
+
+		Node* temp = front;
+
+		while (temp != nullptr) {
+			if (temp->data == old) {
+				temp->data = New;
+				return;
+			}
+			temp = temp->next;
+		}
+	}
+
+	// Counter
+	void Counter(Node* h, int *counter) {
+
+		if (h == nullptr)
+			return;
+
+		Node* temp = h;
+
+		while (temp != nullptr) {
+			(*counter)++;
+			temp = temp->next;
+		}
+	}
+
+	void C(int &counter) {
+		Counter(front, &counter);
+		cout << "Counter In Queue Is :" << counter << endl;
+	}
+
+	// Reverse
+	void Reverse() {
+
+		Node* prev = nullptr;
+		Node* curr = front;
+		Node* next = nullptr;
+
+		rear = front;
+
+		while (curr != nullptr) {
+			next = curr->next;
+			curr->next = prev;
+			prev = curr;
+			curr = next;
+		}
+
+		front = prev;
+	}
+
+	// Print Reverse Recursion
+	void PrintReverse(Node* curr) {
+
+		if (curr == nullptr)
+			return;
+
+		PrintReverse(curr->next);
+		cout << curr->data << " -> ";
+	}
+
+	void PR() {
+
+		PrintReverse(front);
+		cout << "NULL" << endl;
+	}
+
+	// Clear
+	void clear(Node* h) {
+
+		while (h != nullptr) {
+			Node* del = h;
+			h = h->next;
+			delete del;
+		}
+	}
+
+	void Clear() {
+		clear(front);
+		front = rear = nullptr;
+	}
+
+	// Sort
+	void Sort() {
+
+		if (front == nullptr || front->next == nullptr)
+			return;
+
+		for (Node* i = front; i != nullptr; i = i->next) {
+			for (Node* j = i->next; j != nullptr; j = j->next) {
+
+				if (i->data > j->data) {
+					int temp = i->data;
+					i->data = j->data;
+					j->data = temp;
+				}
+			}
+		}
+	}
+
+	// Merge
+	void Merge(QueueLinkedList &l2) {
+
+		if (front == nullptr) {
+			front = l2.front;
+			rear = l2.rear;
+			l2.front = l2.rear = nullptr;
+			return;
+		}
+
+		if (l2.front == nullptr)
+			return;
+
+		rear->next = l2.front;
+		rear = l2.rear;
+
+		l2.front = l2.rear = nullptr;
+	}
+
+	// Middle
+	void Fmiddle() {
+
+		if (front == nullptr)
+			return;
+
+		Node* slow = front;
+		Node* fast = front;
+
+		while (fast && fast->next) {
+			slow = slow->next;
+			fast = fast->next->next;
+		}
+
+		cout << "Middle: " << slow->data << endl;
+	}
+
+	// Min
+	void Min() {
+
+		if (front == nullptr)
+			return;
+
+		int minVal = front->data;
+		Node* temp = front;
+
+		while (temp != nullptr) {
+			if (temp->data < minVal)
+				minVal = temp->data;
+
+			temp = temp->next;
+		}
+
+		cout << "Min: " << minVal << endl;
+	}
+
+	// Max
+	void Max() {
+
+		if (front == nullptr)
+			return;
+
+		int maxVal = front->data;
+		Node* temp = front;
+
+		while (temp != nullptr) {
+			if (temp->data > maxVal)
+				maxVal = temp->data;
+
+			temp = temp->next;
+		}
+
+		cout << "Max: " << maxVal << endl;
+	}
+
+	// Sum
+	int sum(Node* h) {
+
+		int s = 0;
+		Node* temp = h;
+
+		while (temp != nullptr) {
+			s += temp->data;
+			temp = temp->next;
+		}
+
+		return s;
+	}
+
+	void Sum() {
+		cout << "Sum: " << sum(front) << endl;
+	}
+};
+
+int main()
+{
+	int c = 0;
+
+	QueueLinkedList list;
+	QueueLinkedList list2;
+
+	list.InsertAtEnd(10);
+	list.InsertAtEnd(20);
+	list.InsertAtEnd(30);
+	list.InsertAtEnd(40);
+	list.InsertAtEnd(50);
+
+	list.Replacer(30, 500);
+
+	cout << "Original Queue: " << endl;
+	list.Traverse();
+
+	list.C(c);
+
+	list.Sort();
+
+	cout << "Sorted Queue: " << endl;
+	list.Traverse();
+
+	list2.InsertAtHead(40);
+	list2.InsertAtHead(40);
+	list2.InsertAtHead(40);
+
+	list.Merge(list2);
+
+	cout << "After Merge: " << endl;
+	list.Traverse();
+
+	list.Fmiddle();
+	list.Min();
+	list.Max();
+	list.Sum();
+
+	return 0;
+}

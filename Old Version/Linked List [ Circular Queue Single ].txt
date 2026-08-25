@@ -1,0 +1,489 @@
+#include <iostream>
+using namespace std;
+
+//              Mastered Queue Circular Singly Linked List
+
+class Node{
+	public:
+		int data;
+		Node* next;
+
+public :
+	Node(int val) {
+		data = val;
+		next = nullptr;
+	}
+};
+
+class QueueCircularLinkedList {
+
+private:
+	Node* head;
+
+public :
+
+	QueueCircularLinkedList() {
+		head = nullptr;
+	}
+
+	// Insert at head (enqueue front style in circular queue)
+	void InsertAtHead(int val) {
+
+		Node* newNode = new Node(val);
+
+		if (head == nullptr) {
+			head = newNode;
+			newNode->next = head;
+		}
+		else {
+			Node* temp = head;
+
+			while (temp->next != head) {
+				temp = temp->next;
+			}
+
+			newNode->next = head;
+			temp->next = newNode;
+			head = newNode;
+		}
+	}
+
+	// Insert at end (ENQUEUE REAL)
+	void InsertAtEnd(int val) {
+
+		Node* newNode = new Node(val);
+
+		if (head == nullptr) {
+			head = newNode;
+			newNode->next = head;
+		}
+		else {
+			Node* temp = head;
+
+			while (temp->next != head) {
+				temp = temp->next;
+			}
+
+			temp->next = newNode;
+			newNode->next = head;
+		}
+	}
+
+	// Traverse
+	void Traverse() {
+
+		if (head == nullptr) {
+			cout << "Queue is empty" << endl;
+			return;
+		}
+
+		Node* temp = head;
+
+		do {
+			cout << temp->data << " -> ";
+			temp = temp->next;
+		} while (temp != head);
+
+		cout << "HEAD" << endl;
+	}
+
+	// Delete At Head (DEQUEUE)
+	void DeleteAtHead() {
+
+		if (head == nullptr)
+			return;
+
+		if (head->next == head) {
+			delete head;
+			head = nullptr;
+			return;
+		}
+
+		Node* temp = head;
+
+		while (temp->next != head) {
+			temp = temp->next;
+		}
+
+		Node* del = head;
+		temp->next = head->next;
+		head = head->next;
+
+		delete del;
+	}
+
+	// Delete At End
+	void DeleteAtEnd() {
+
+		if (head == nullptr)
+			return;
+
+		if (head->next == head) {
+			delete head;
+			head = nullptr;
+			return;
+		}
+
+		Node* temp = head;
+
+		while (temp->next->next != head) {
+			temp = temp->next;
+		}
+
+		delete temp->next;
+		temp->next = head;
+	}
+
+	// Delete At Position
+	void DeleteAtPos(int pos) {
+
+		if (head == nullptr)
+			return;
+
+		if (pos == 1) {
+			DeleteAtHead();
+			return;
+		}
+
+		Node* temp = head;
+		Node* prev = nullptr;
+		int i = 1;
+
+		while (i < pos && temp->next != head) {
+			prev = temp;
+			temp = temp->next;
+			i++;
+		}
+
+		if (temp == head)
+			return;
+
+		prev->next = temp->next;
+		delete temp;
+	}
+
+	// Insert At Position
+	void InsertAtPos(int val, int idx) {
+
+		if (idx == 1) {
+			InsertAtHead(val);
+			return;
+		}
+
+		Node* newNode = new Node(val);
+		Node* temp = head;
+		int i = 1;
+
+		while (i < idx - 1 && temp->next != head) {
+			temp = temp->next;
+			i++;
+		}
+
+		newNode->next = temp->next;
+		temp->next = newNode;
+	}
+
+	// Search
+	void Search(int key) {
+
+		if (head == nullptr)
+			return;
+
+		Node* temp = head;
+
+		do {
+			if (temp->data == key) {
+				cout << "Element found: " << key << endl;
+				return;
+			}
+			temp = temp->next;
+		} while (temp != head);
+
+		cout << "Element not found: " << key << endl;
+	}
+
+	// Replace
+	void Replacer(int old, int New) {
+
+		if (head == nullptr)
+			return;
+
+		Node* temp = head;
+
+		do {
+			if (temp->data == old) {
+				temp->data = New;
+				return;
+			}
+			temp = temp->next;
+		} while (temp != head);
+	}
+
+	// Counter
+	void Counter(Node* h, int *counter) {
+
+		if (h == nullptr)
+			return;
+
+		Node* temp = h;
+
+		do {
+			(*counter)++;
+			temp = temp->next;
+		} while (temp != h);
+	}
+
+	void C(int &counter) {
+		Counter(head, &counter);
+		cout << "Counter In Queue Is :" << counter << endl;
+	}
+
+	// Reverse (same logic like your circular version)
+	void Reverse() {
+
+		if (head == nullptr || head->next == head)
+			return;
+
+		Node* prev = nullptr;
+		Node* curr = head;
+		Node* next = nullptr;
+		Node* last = head;
+
+		do {
+			last = last->next;
+		} while (last->next != head);
+
+		do {
+			next = curr->next;
+			curr->next = prev;
+			prev = curr;
+			curr = next;
+		} while (curr != head);
+
+		head->next = prev;
+		head = prev;
+	}
+
+	// Print Reverse Recursion
+	void PrintReverse(Node* curr, Node* stop) {
+
+		if (curr == stop)
+			return;
+
+		PrintReverse(curr->next, stop);
+		cout << curr->data << " -> ";
+	}
+
+	void PR() {
+
+		if (head == nullptr)
+			return;
+
+		Node* temp = head;
+
+		while (temp->next != head) {
+			temp = temp->next;
+		}
+
+		PrintReverse(head, temp);
+		cout << "HEAD" << endl;
+	}
+
+	// Clear
+	void clear(Node* h) {
+
+		if (h == nullptr)
+			return;
+
+		Node* temp = h;
+
+		while (temp->next != h) {
+			Node* del = temp;
+			temp = temp->next;
+			delete del;
+		}
+
+		delete temp;
+	}
+
+	void Clear() {
+		clear(head);
+		head = nullptr;
+	}
+
+	// Sort
+	void Sort() {
+
+		if (head == nullptr || head->next == head)
+			return;
+
+		Node* i = head;
+
+		do {
+			Node* j = i->next;
+
+			do {
+				if (i->data > j->data) {
+					int temp = i->data;
+					i->data = j->data;
+					j->data = temp;
+				}
+				j = j->next;
+			} while (j != head);
+
+			i = i->next;
+
+		} while (i->next != head);
+	}
+
+	// Merge
+	void Merge(QueueCircularLinkedList &l2) {
+
+		if (head == nullptr) {
+			head = l2.head;
+			l2.head = nullptr;
+			return;
+		}
+
+		Node* temp = head;
+
+		while (temp->next != head) {
+			temp = temp->next;
+		}
+
+		Node* temp2 = l2.head;
+
+		if (temp2 == nullptr)
+			return;
+
+		temp->next = temp2;
+
+		while (temp2->next != l2.head) {
+			temp2 = temp2->next;
+		}
+
+		temp2->next = head;
+
+		l2.head = nullptr;
+	}
+
+	// Middle
+	void Fmiddle() {
+
+		if (head == nullptr)
+			return;
+
+		Node* slow = head;
+		Node* fast = head;
+
+		do {
+			slow = slow->next;
+			fast = fast->next->next;
+		} while (fast != head && fast->next != head);
+
+		cout << "Middle: " << slow->data << endl;
+	}
+
+	// Min
+	void Min() {
+
+		if (head == nullptr)
+			return;
+
+		int minVal = head->data;
+		Node* temp = head;
+
+		do {
+			if (temp->data < minVal)
+				minVal = temp->data;
+
+			temp = temp->next;
+		} while (temp != head);
+
+		cout << "Min: " << minVal << endl;
+	}
+
+	// Max
+	void Max() {
+
+		if (head == nullptr)
+			return;
+
+		int maxVal = head->data;
+		Node* temp = head;
+
+		do {
+			if (temp->data > maxVal)
+				maxVal = temp->data;
+
+			temp = temp->next;
+		} while (temp != head);
+
+		cout << "Max: " << maxVal << endl;
+	}
+
+	// Sum
+	int sum(Node* h) {
+
+		if (h == nullptr)
+			return 0;
+
+		int s = 0;
+		Node* temp = h;
+
+		do {
+			s += temp->data;
+			temp = temp->next;
+		} while (temp != h);
+
+		return s;
+	}
+
+	void Sum() {
+		cout << "Sum: " << sum(head) << endl;
+	}
+};
+
+int main()
+{
+	int c = 0;
+
+	QueueCircularLinkedList list;
+	QueueCircularLinkedList list2;
+
+	list.InsertAtEnd(10);
+	list.InsertAtEnd(20);
+	list.InsertAtEnd(30);
+	list.InsertAtEnd(40);
+	list.InsertAtEnd(50);
+
+	list.Replacer(30, 500);
+
+	cout << "Original Queue: " << endl;
+	list.Traverse();
+
+	list.C(c);
+
+	cout << endl;
+
+	list.Sort();
+
+	cout << "Sorted Queue: " << endl;
+	list.Traverse();
+
+	list2.InsertAtHead(40);
+	list2.InsertAtHead(40);
+	list2.InsertAtHead(40);
+
+	list.Merge(list2);
+
+	cout << "After Merge: " << endl;
+	list.Traverse();
+
+	list.Fmiddle();
+	list.Min();
+	list.Max();
+	list.Sum();
+
+	return 0;
+}

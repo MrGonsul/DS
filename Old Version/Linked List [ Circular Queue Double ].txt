@@ -1,0 +1,502 @@
+#include <iostream>
+using namespace std;
+
+//              Mastered Circular Doubly Linked List
+
+class Node {
+public:
+    int data;
+    Node* next;
+    Node* prev;
+
+public:
+    Node(int val) {
+        data = val;
+        next = nullptr;
+        prev = nullptr;
+    }
+};
+
+class CircularDoublyLinkedList {
+
+private:
+    Node* head;
+
+public:
+
+    CircularDoublyLinkedList() {
+        head = nullptr;
+    }
+
+    // Insert at head
+    void InsertAtHead(int val) {
+
+        Node* newNode = new Node(val);
+
+        if (head == nullptr) {
+            head = newNode;
+            newNode->next = newNode;
+            newNode->prev = newNode;
+        }
+        else {
+            Node* tail = head->prev;
+
+            newNode->next = head;
+            newNode->prev = tail;
+
+            tail->next = newNode;
+            head->prev = newNode;
+
+            head = newNode;
+        }
+    }
+
+    // Insert at end
+    void InsertAtEnd(int val) {
+
+        Node* newNode = new Node(val);
+
+        if (head == nullptr) {
+            head = newNode;
+            newNode->next = newNode;
+            newNode->prev = newNode;
+            return;
+        }
+
+        Node* tail = head->prev;
+
+        tail->next = newNode;
+        newNode->prev = tail;
+
+        newNode->next = head;
+        head->prev = newNode;
+    }
+
+    // Traverse
+    void Traverse() {
+
+        if (head == nullptr) {
+            cout << "List is empty" << endl;
+            return;
+        }
+
+        Node* temp = head;
+
+        do {
+            cout << temp->data;
+
+            if (temp->next != head)
+                cout << " <-> ";
+
+            temp = temp->next;
+
+        } while (temp != head);
+
+        cout << " (HEAD)" << endl;
+    }
+
+    // Delete at head
+    void DeleteAtHead() {
+
+        if (head == nullptr)
+            return;
+
+        if (head->next == head) {
+            delete head;
+            head = nullptr;
+            return;
+        }
+
+        Node* tail = head->prev;
+        Node* del = head;
+
+        head = head->next;
+
+        tail->next = head;
+        head->prev = tail;
+
+        delete del;
+    }
+
+    // Delete at end
+    void DeleteAtEnd() {
+
+        if (head == nullptr)
+            return;
+
+        if (head->next == head) {
+            delete head;
+            head = nullptr;
+            return;
+        }
+
+        Node* tail = head->prev;
+        Node* newTail = tail->prev;
+
+        newTail->next = head;
+        head->prev = newTail;
+
+        delete tail;
+    }
+
+    // Delete at position
+    void DeleteAtPos(int pos) {
+
+        if (head == nullptr)
+            return;
+
+        if (pos == 1) {
+            DeleteAtHead();
+            return;
+        }
+
+        Node* temp = head;
+        int i = 1;
+
+        do {
+            if (i == pos)
+                break;
+
+            temp = temp->next;
+            i++;
+
+        } while (temp != head);
+
+        if (temp == head)
+            return;
+
+        temp->prev->next = temp->next;
+        temp->next->prev = temp->prev;
+
+        delete temp;
+    }
+
+    // Insert at position
+    void InsertAtPos(int val, int idx) {
+
+        if (idx == 1) {
+            InsertAtHead(val);
+            return;
+        }
+
+        Node* newNode = new Node(val);
+        Node* temp = head;
+        int i = 1;
+
+        do {
+            if (i == idx - 1)
+                break;
+
+            temp = temp->next;
+            i++;
+
+        } while (temp != head);
+
+        newNode->next = temp->next;
+        newNode->prev = temp;
+
+        temp->next->prev = newNode;
+        temp->next = newNode;
+    }
+
+    // Search
+    void Search(int key) {
+
+        if (head == nullptr)
+            return;
+
+        Node* temp = head;
+
+        do {
+            if (temp->data == key) {
+                cout << "Element found: " << key << endl;
+                return;
+            }
+
+            temp = temp->next;
+
+        } while (temp != head);
+
+        cout << "Element not found: " << key << endl;
+    }
+
+    // Replace
+    void Replacer(int oldVal, int newVal) {
+
+        if (head == nullptr)
+            return;
+
+        Node* temp = head;
+
+        do {
+            if (temp->data == oldVal) {
+                temp->data = newVal;
+                return;
+            }
+
+            temp = temp->next;
+
+        } while (temp != head);
+    }
+
+    // Counter
+    void Counter(int &counter) {
+
+        if (head == nullptr)
+            return;
+
+        Node* temp = head;
+
+        do {
+            counter++;
+            temp = temp->next;
+
+        } while (temp != head);
+    }
+
+    void C(int &counter) {
+        Counter(counter);
+        cout << "Counter In List Is : " << counter << endl;
+    }
+
+    // Reverse (swap links)
+    void Reverse() {
+
+        if (head == nullptr || head->next == head)
+            return;
+
+        Node* temp = head;
+
+        do {
+            Node* nxt = temp->next;
+            temp->next = temp->prev;
+            temp->prev = nxt;
+
+            temp = nxt;
+
+        } while (temp != head);
+
+        head = head->prev;
+    }
+
+    // Print Reverse Recursion
+    void PrintReverse(Node* curr) {
+
+        if (curr->next == head)
+            return;
+
+        PrintReverse(curr->next);
+        cout << curr->data << " <-> ";
+    }
+
+    void PR() {
+
+        if (head == nullptr)
+            return;
+
+        PrintReverse(head);
+        cout << head->prev->data << " (HEAD)" << endl;
+    }
+
+    // Clear
+    void Clear() {
+
+        if (head == nullptr)
+            return;
+
+        Node* temp = head;
+
+        do {
+            Node* del = temp;
+            temp = temp->next;
+            delete del;
+
+        } while (temp != head);
+
+        head = nullptr;
+    }
+
+    // Sort
+    void Sort() {
+
+        if (head == nullptr || head->next == head)
+            return;
+
+        Node* i = head;
+
+        do {
+            Node* j = i->next;
+
+            do {
+                if (i->data > j->data) {
+                    int temp = i->data;
+                    i->data = j->data;
+                    j->data = temp;
+                }
+
+                j = j->next;
+
+            } while (j != head);
+
+            i = i->next;
+
+        } while (i->next != head);
+    }
+
+    // Merge
+    void Merge(CircularDoublyLinkedList &l2) {
+
+        if (head == nullptr) {
+            head = l2.head;
+            l2.head = nullptr;
+            return;
+        }
+
+        if (l2.head == nullptr)
+            return;
+
+        Node* tail1 = head->prev;
+        Node* tail2 = l2.head->prev;
+
+        tail1->next = l2.head;
+        l2.head->prev = tail1;
+
+        tail2->next = head;
+        head->prev = tail2;
+
+        l2.head = nullptr;
+    }
+
+    // Middle
+    void Fmiddle() {
+
+        if (head == nullptr)
+            return;
+
+        Node* slow = head;
+        Node* fast = head;
+
+        do {
+            slow = slow->next;
+            fast = fast->next->next;
+
+        } while (fast != head && fast->next != head);
+
+        cout << "Middle: " << slow->data << endl;
+    }
+
+    // Min
+    void Min() {
+
+        if (head == nullptr)
+            return;
+
+        int mn = head->data;
+        Node* temp = head;
+
+        do {
+            if (temp->data < mn)
+                mn = temp->data;
+
+            temp = temp->next;
+
+        } while (temp != head);
+
+        cout << "Min: " << mn << endl;
+    }
+
+    // Max
+    void Max() {
+
+        if (head == nullptr)
+            return;
+
+        int mx = head->data;
+        Node* temp = head;
+
+        do {
+            if (temp->data > mx)
+                mx = temp->data;
+
+            temp = temp->next;
+
+        } while (temp != head);
+
+        cout << "Max: " << mx << endl;
+    }
+
+    // Sum
+    int sum(Node* h) {
+
+        if (h == nullptr)
+            return 0;
+
+        int s = 0;
+        Node* temp = h;
+
+        do {
+            s += temp->data;
+            temp = temp->next;
+
+        } while (temp != h);
+
+        return s;
+    }
+
+    void Sum() {
+        cout << "Sum: " << sum(head) << endl;
+    }
+};
+
+int main()
+{
+    int c = 0;
+
+    CircularDoublyLinkedList list;
+    CircularDoublyLinkedList list2;
+
+    list.InsertAtEnd(10);
+    list.InsertAtEnd(20);
+    list.InsertAtEnd(30);
+    list.InsertAtEnd(40);
+    list.InsertAtEnd(50);
+
+    cout << "Original List:" << endl;
+    list.Traverse();
+
+    list.Replacer(30, 500);
+
+    cout << "\nAfter Replace:" << endl;
+    list.Traverse();
+
+    list.C(c);
+
+    list.Sort();
+
+    cout << "\nSorted List:" << endl;
+    list.Traverse();
+
+    list2.InsertAtHead(40);
+    list2.InsertAtHead(40);
+    list2.InsertAtHead(40);
+
+    list.Merge(list2);
+
+    cout << "\nAfter Merge:" << endl;
+    list.Traverse();
+
+    list.Fmiddle();
+    list.Min();
+    list.Max();
+    list.Sum();
+
+    list.Reverse();
+    cout << "\nAfter Reverse:" << endl;
+    list.Traverse();
+
+    list.Clear();
+    cout << "\nAfter Clear:" << endl;
+    list.Traverse();
+
+    return 0;
+}
