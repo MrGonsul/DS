@@ -1,0 +1,13 @@
+void CountPositiveNegative(Node* root, int& positive, int& negative)
+{
+    if (root == nullptr)
+        return;
+
+    if (root->data > 0)
+        positive++;
+    else if (root->data < 0)
+        negative++;
+
+    CountPositiveNegative(root->left, positive, negative);
+    CountPositiveNegative(root->right, positive, negative);
+}

@@ -1,0 +1,99 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = right = nullptr;
+    }
+};
+
+class BST {
+private:
+    Node* root;
+    Node* evenRoot; // شجرة الزوجي
+    Node* oddRoot;  // شجرة الفردي
+
+    Node* Insert(Node* node, int val) {
+        if (node == nullptr)
+            return new Node(val);
+
+        if (val < node->data)
+            node->left = Insert(node->left, val);
+        else
+            node->right = Insert(node->right, val);
+
+        return node;
+    }
+
+    void Split(Node* node) {
+        if (node == nullptr)
+            return;
+
+        if (node->data % 2 == 0)
+            evenRoot = Insert(evenRoot, node->data);
+        else
+            oddRoot = Insert(oddRoot, node->data);
+
+        Split(node->left);
+        Split(node->right);
+    }
+
+    void InOrder(Node* node) {
+        if (node == nullptr)
+            return;
+
+        InOrder(node->left);
+        cout << node->data << " ";
+        InOrder(node->right);
+    }
+
+public:
+    BST() {
+        root = nullptr;
+        evenRoot = nullptr;
+        oddRoot = nullptr;
+    }
+
+    void Insert(int val) {
+        root = Insert(root, val);
+    }
+
+    void SeparateEvenOdd() {
+        Split(root);
+    }
+
+    void PrintEven() {
+        InOrder(evenRoot);
+        cout << endl;
+    }
+
+    void PrintOdd() {
+        InOrder(oddRoot);
+        cout << endl;
+    }
+};
+
+int main() {
+    BST tree;
+
+    tree.Insert(10);
+    tree.Insert(5);
+    tree.Insert(15);
+    tree.Insert(8);
+    tree.Insert(3);
+    tree.Insert(20);
+
+    tree.SeparateEvenOdd();
+
+    cout << "Even Tree: ";
+    tree.PrintEven();
+
+    cout << "Odd Tree: ";
+    tree.PrintOdd();
+}

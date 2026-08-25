@@ -1,0 +1,14 @@
+void PrintPositiveNegative(Node* root)
+{
+    if (root == nullptr)
+        return;
+
+    PrintPositiveNegative(root->left);
+
+    if (root->data > 0)
+        cout << "Positive: " << root->data << endl;
+    else if (root->data < 0)
+        cout << "Negative: " << root->data << endl;
+
+    PrintPositiveNegative(root->right);
+}

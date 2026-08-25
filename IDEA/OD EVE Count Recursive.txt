@@ -1,0 +1,13 @@
+void CountEvenOdd(Node* root, int& even, int& odd)
+{
+    if (root == nullptr)
+        return;
+
+    if (root->data % 2 == 0)
+        even++;
+    else
+        odd++;
+
+    CountEvenOdd(root->left, even, odd);
+    CountEvenOdd(root->right, even, odd);
+}

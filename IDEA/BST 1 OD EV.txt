@@ -1,0 +1,85 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = right = nullptr;
+    }
+};
+
+class BST {
+private:
+    Node* root;
+
+    Node* insert(Node* node, int val) {
+        if (node == nullptr)
+            return new Node(val);
+
+        if (val < node->data)
+            node->left = insert(node->left, val);
+        else
+            node->right = insert(node->right, val);
+
+        return node;
+    }
+
+    void findEvenOdd(Node* node,
+                     vector<int>& even,
+                     vector<int>& odd) {
+        if (node == nullptr)
+            return;
+
+        if (node->data % 2 == 0)
+            even.push_back(node->data);
+        else
+            odd.push_back(node->data);
+
+        findEvenOdd(node->left, even, odd);
+        findEvenOdd(node->right, even, odd);
+    }
+
+public:
+    BST() {
+        root = nullptr;
+    }
+
+    void Insert(int val) {
+        root = insert(root, val);
+    }
+
+    void PrintEvenOdd() {
+        vector<int> even, odd;
+
+        findEvenOdd(root, even, odd);
+
+        cout << "Even Numbers: ";
+        for (int x : even)
+            cout << x << " ";
+
+        cout << "\nOdd Numbers: ";
+        for (int x : odd)
+            cout << x << " ";
+    }
+};
+
+int main() {
+    BST tree;
+
+    tree.Insert(10);
+    tree.Insert(5);
+    tree.Insert(15);
+    tree.Insert(8);
+    tree.Insert(3);
+    tree.Insert(20);
+
+    tree.PrintEvenOdd();
+
+    return 0;
+}

@@ -1,0 +1,14 @@
+void EvenOdd(Node* root)
+{
+    if (root == nullptr)
+        return;
+
+    EvenOdd(root->left);
+
+    if (root->data % 2 == 0)
+        cout << "Even: " << root->data << endl;
+    else
+        cout << "Odd: " << root->data << endl;
+
+    EvenOdd(root->right);
+}
